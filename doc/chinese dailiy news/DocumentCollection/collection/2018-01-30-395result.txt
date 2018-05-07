@@ -1,0 +1,1 @@
+資策會將於3月21日開辦「人工智慧TensorFlow應用設計」，助學員能夠快速上手，使用TensorFlow設計具有人工智慧功能的軟體系統。課程將透過Google TensorFlow開發平台，從Python程式設計開始介紹，加上向量及矩陣處理說明、Tensor使用方法介紹、GPU加速整合、神經網路運算、深度學習演算，一直到人工智慧應用程式開發，使學員能夠實際扎實設計人工智慧應用程式。網址：http://www.iiiedu.org.tw/ites/TENSORFLOW.htm。(工商時報)
