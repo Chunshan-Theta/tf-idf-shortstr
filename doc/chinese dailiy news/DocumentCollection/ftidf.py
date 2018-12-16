@@ -1,3 +1,4 @@
+#python3
 from tfidfalgorithm import idf
 import os,sys
 sys.path.append('./jieba_zn/')
@@ -25,6 +26,8 @@ def loadingFile(FileNum=10,trainingfolder="./collection/"):
                 FileContentArray.append(content)
             if idx>FileNum:
                 break
+            else:
+                log.info("loadingNum:"+str(idx)+"/"+str(FileNum))
     log.debug(FileContentArray)
     return FileContentArray
 
@@ -32,7 +35,8 @@ def loadingFile(FileNum=10,trainingfolder="./collection/"):
 def MakeWordsList(DataArray):
     wordslist = []
     
-    
+    count_DataArray = len(DataArray)
+
     for idx, unitContent in enumerate(DataArray):
 
         seg_list = jieba.lcut(unitContent,cut_all=False)
@@ -42,6 +46,7 @@ def MakeWordsList(DataArray):
             if not words in wordslist:
                 log.debug(words)
                 wordslist.append(words)
+        log.info("catchWordprocess:"+str(idx)+"/"+str(count_DataArray))
 
     log.debug(wordslist)    
     return wordslist
@@ -52,8 +57,8 @@ def frontProcess(wordslist,DataArray=[],additionalWeight=0):
     NumberAppearArticle = 0
     NumberArticle = len(DataArray)
     currentdict = {}
-    
-    for word in wordslist:
+    count_wordslist = len(wordslist)
+    for idx, word in enumerate(wordslist):
         if not word in currentdict:
             NumberAppearArticle = 0
             for row in DataArray:
@@ -65,6 +70,8 @@ def frontProcess(wordslist,DataArray=[],additionalWeight=0):
                     NumberAppearArticle+=theta*additionalWeight
            
             currentdict = computing(NumberArticle,NumberAppearArticle,currentdict,word)
+        log.info("computingprocess:"+str(idx)+"/"+str(count_wordslist))
+
     log.debug(currentdict)    
     return currentdict
 
@@ -103,7 +110,7 @@ def showchart(d,showON=1):
 
 
 
-DataArray = loadingFile(200)
+DataArray = loadingFile(40000)
 wordslist = MakeWordsList(DataArray)
 '''
 d = frontProcess(wordslist,DataArray,2)
@@ -112,8 +119,13 @@ d = frontProcess(wordslist,DataArray,1)
 showchart(d,0)
 '''
 
-for i in range(5):
-    d = frontProcess(wordslist,DataArray,5-i)
-    showchart(d,0)
-d = frontProcess(wordslist,DataArray,0)
-showchart(d)
+
+d = frontProcess(wordslist,DataArray,5)
+#showchart(d)
+import json
+json_d = json.dumps(d)
+
+with open("./outpute.txt","w",encoding="utf-8") as f:
+    f.write(json_d)
+with open("./outpute.txt","r",encoding="utf-8") as f:
+    log.debug(json.loads(f.read()))
